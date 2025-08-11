@@ -55,15 +55,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_getAppBarTitle(_selectedIndex)),
-        actions: [
+        actions: _selectedIndex == 3
+            ? [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),
-        ],
+        ]
+            : [],
       ),
+
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
