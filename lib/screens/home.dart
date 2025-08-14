@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../db/db_helper.dart';
+import 'dashboard.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,9 +15,31 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacementNamed(context, '/login');
-    });
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (isLoggedIn) {
+      int? userId = prefs.getInt('userId');
+      if (userId != null) {
+        final db = DBHelper();
+        final user = await db.getUserById(userId);
+        if (user != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => DashboardScreen(user: user)),
+          );
+          return;
+        }
+      }
+    }
+
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override

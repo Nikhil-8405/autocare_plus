@@ -40,6 +40,7 @@ dependencies:
   fluttertoast: ^8.2.4       # To show small messages
   provider: ^6.1.2           # For state management (optional but useful)
   intl: ^0.20.2
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

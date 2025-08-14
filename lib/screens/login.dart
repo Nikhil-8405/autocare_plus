@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../db/db_helper.dart';
 import 'dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   void _loginUser() async {
     if (_formKey.currentState!.validate()) {
@@ -21,6 +22,11 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (user != null) {
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setInt('userId', user['id']);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Login Successful!")),
         );
@@ -42,28 +48,30 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(title: const Text("Login")),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: "Email"),
-                validator: (value) => value!.isEmpty ? "Enter email" : null,
+                decoration: const InputDecoration(labelText: "Email"),
+                validator: (value) =>
+                value!.isEmpty ? "Enter your email" : null,
               ),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(labelText: "Password"),
-                validator: (value) => value!.isEmpty ? "Enter password" : null,
+                decoration: const InputDecoration(labelText: "Password"),
+                validator: (value) =>
+                value!.isEmpty ? "Enter your password" : null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _loginUser,
-                child: Text("Login"),
+                child: const Text("Login"),
               ),
               TextButton(
                 onPressed: () {

@@ -110,6 +110,16 @@ class DBHelper {
     return result.isNotEmpty ? result.first : null;
   }
 
+  Future<Map<String, dynamic>?> getUserById(int id) async {
+    final db = await database;
+    final result = await db.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
   Future<bool> isEmailExists(String email) async {
     final db = await database;
     final result = await db.query('users', where: 'email = ?', whereArgs: [email]);

@@ -9,6 +9,7 @@ import 'package:autocare_plus/screens/add_mileage.dart';
 import 'package:autocare_plus/screens/mileage_log.dart';
 import 'package:autocare_plus/screens/report.dart';
 import 'package:autocare_plus/screens/reminder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -59,14 +60,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ? [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
+
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),
         ]
             : [],
       ),
-
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -187,6 +190,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ],
     );
   }
+
   Widget _buildTile(BuildContext context, IconData icon, String label, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
