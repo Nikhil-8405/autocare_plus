@@ -21,51 +21,62 @@ class _HomeScreenState extends State<HomeScreen> {
   void _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    int? userId = prefs.getInt('userId');
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2)); // splash delay
 
-    if (isLoggedIn) {
-      int? userId = prefs.getInt('userId');
-      if (userId != null) {
-        final db = DBHelper();
-        final user = await db.getUserById(userId);
-        if (user != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => DashboardScreen(user: user)),
-          );
-          return;
-        }
+    if (isLoggedIn && userId != null) {
+      final db = DBHelper();
+      final user = await db.getUserById(userId);
+
+      if (user != null) {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => DashboardScreen(user: user)),
+        );
+        return;
       }
     }
 
+    // default → login screen
+    if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.directions_car_filled, size: 100, color: Colors.blue),
-            SizedBox(height: 20),
-            Text(
-              'AutoCare+',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade600, Colors.blue.shade200],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(Icons.directions_car_filled, size: 110, color: Colors.white),
+              SizedBox(height: 25),
+              Text(
+                'AutoCare+',
+                style: TextStyle(
+                  fontSize: 34,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 1.2,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Your Personal Vehicle Manager',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
+              SizedBox(height: 12),
+              Text(
+                'Your Personal Vehicle Manager',
+                style: TextStyle(fontSize: 16, color: Colors.white70),
+              ),
+            ],
+          ),
         ),
       ),
     );

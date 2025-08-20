@@ -55,27 +55,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_getAppBarTitle(_selectedIndex)),
+        backgroundColor: Colors.blue.shade600,
+        elevation: 0,
+        title: Text(
+          _getAppBarTitle(_selectedIndex),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         actions: _selectedIndex == 3
             ? [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
               final prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
+              await prefs.clear();  // clear login state
 
+              if (!mounted) return;
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),
         ]
             : [],
       ),
-      body: _screens[_selectedIndex],
+
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        child: _screens[_selectedIndex],
+      ),
+
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.blue.shade600,
+        unselectedItemColor: Colors.grey.shade500,
         onTap: _onTabTapped,
+        elevation: 8,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.notifications), label: "Reminders"),
@@ -87,126 +101,103 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildHomeScreen(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "Welcome, ${widget.user['username'] ?? 'User'}",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 2,
-            padding: const EdgeInsets.all(16),
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            children: [
-              _buildTile(context, Icons.add_circle, "Add Vehicle", () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AddEditVehicleScreen(userId: widget.user['id']),
-                  ),
-                );
-              }),
-              _buildTile(context, Icons.list_alt, "Vehicle List", () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => VehicleListScreen(userId: widget.user['id']),
-                  ),
-                );
-              }),
-              _buildTile(context, Icons.add_task, "Add Service", () async {
-                final selectedVehicleId = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SelectVehicleScreen(userId: widget.user['id']),
-                  ),
-                );
-                if (selectedVehicleId != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AddServiceScreen(vehicleId: selectedVehicleId),
-                    ),
-                  );
-                }
-              }),
-              _buildTile(context, Icons.history, "Service History", () async {
-                final selectedVehicleId = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SelectVehicleScreen(userId: widget.user['id']),
-                  ),
-                );
-                if (selectedVehicleId != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ServiceHistoryScreen(vehicleId: selectedVehicleId),
-                    ),
-                  );
-                }
-              }),
-              _buildTile(context, Icons.add_road, "Add Mileage", () async {
-                final selectedVehicleId = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SelectVehicleScreen(userId: widget.user['id']),
-                  ),
-                );
-                if (selectedVehicleId != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AddMileageScreen(vehicleId: selectedVehicleId),
-                    ),
-                  );
-                }
-              }),
-              _buildTile(context, Icons.local_gas_station, "Mileage Log", () async {
-                final selectedVehicleId = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SelectVehicleScreen(userId: widget.user['id']),
-                  ),
-                );
-                if (selectedVehicleId != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => MileageLogScreen(vehicleId: selectedVehicleId),
-                    ),
-                  );
-                }
-              }),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+    final features = [
+      {"icon": Icons.add_circle, "label": "Add Vehicle", "onTap": () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => AddEditVehicleScreen(userId: widget.user['id'])));
+      }},
+      {"icon": Icons.list_alt, "label": "Vehicle List", "onTap": () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => VehicleListScreen(userId: widget.user['id'])));
+      }},
+      {"icon": Icons.add_task, "label": "Add Service", "onTap": () async {
+        final selectedVehicleId = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => SelectVehicleScreen(userId: widget.user['id'])),
+        );
+        if (selectedVehicleId != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => AddServiceScreen(vehicleId: selectedVehicleId)));
+        }
+      }},
+      {"icon": Icons.history, "label": "Service History", "onTap": () async {
+        final selectedVehicleId = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => SelectVehicleScreen(userId: widget.user['id'])),
+        );
+        if (selectedVehicleId != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceHistoryScreen(vehicleId: selectedVehicleId)));
+        }
+      }},
+      {"icon": Icons.add_road, "label": "Add Mileage", "onTap": () async {
+        final selectedVehicleId = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => SelectVehicleScreen(userId: widget.user['id'])),
+        );
+        if (selectedVehicleId != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => AddMileageScreen(vehicleId: selectedVehicleId)));
+        }
+      }},
+      {"icon": Icons.local_gas_station, "label": "Mileage Log", "onTap": () async {
+        final selectedVehicleId = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => SelectVehicleScreen(userId: widget.user['id'])),
+        );
+        if (selectedVehicleId != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => MileageLogScreen(vehicleId: selectedVehicleId)));
+        }
+      }},
+    ];
 
-  Widget _buildTile(BuildContext context, IconData icon, String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 40, color: Colors.blue),
-              const SizedBox(height: 8),
-              Text(label, style: const TextStyle(fontSize: 14)),
-            ],
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade100, Colors.white],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ✅ Only Welcome text, no avatar
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              "Welcome, ${widget.user['username'] ?? 'User'}",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+              ),
+              itemCount: features.length,
+              itemBuilder: (context, index) {
+                final item = features[index];
+                return GestureDetector(
+                  onTap: item["onTap"] as VoidCallback,
+                  child: Card(
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shadowColor: Colors.blue.shade100,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(item["icon"] as IconData, size: 50, color: Colors.blue.shade600),
+                        const SizedBox(height: 10),
+                        Text(item["label"] as String,
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
