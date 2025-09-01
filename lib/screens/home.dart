@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 12),
               Text(
                 'Your Personal Vehicle Manager',
-                style: TextStyle(fontSize: 16, color: Colors.white70),
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ],
           ),

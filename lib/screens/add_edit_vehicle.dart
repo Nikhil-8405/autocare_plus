@@ -12,6 +12,7 @@ class AddEditVehicleScreen extends StatefulWidget {
 }
 
 class _AddEditVehicleScreenState extends State<AddEditVehicleScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _modelController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
@@ -28,25 +29,36 @@ class _AddEditVehicleScreenState extends State<AddEditVehicleScreen> {
     }
   }
 
-  void _saveVehicle() async {
-    final db = DBHelper();
-    Map<String, dynamic> vehicleData = {
-      'user_id': widget.userId,
-      'brand': _brandController.text,
-      'model': _modelController.text,
-      'number': _numberController.text,
-      'year': _yearController.text,
-    };
+  Future<void> _saveVehicle() async {
+    if (_formKey.currentState!.validate()) {
+      final db = DBHelper();
+      Map<String, dynamic> vehicleData = {
+        'user_id': widget.userId,
+        'brand': _brandController.text.trim(),
+        'model': _modelController.text.trim(),
+        'number': _numberController.text.trim(),
+        'year': _yearController.text.trim(),
+      };
 
-    if (widget.vehicle != null) {
-      // Update
-      await db.updateVehicle(widget.vehicle!['id'], vehicleData);
-    } else {
-      // Insert
-      await db.insertVehicle(vehicleData);
+      if (widget.vehicle != null) {
+        // Update
+        await db.updateVehicle(widget.vehicle!['id'], vehicleData);
+      } else {
+        // Insert
+        await db.insertVehicle(vehicleData);
+      }
+
+      Navigator.pop(context);
     }
+  }
 
-    Navigator.pop(context);
+  @override
+  void dispose() {
+    _brandController.dispose();
+    _modelController.dispose();
+    _numberController.dispose();
+    _yearController.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,31 +71,53 @@ class _AddEditVehicleScreenState extends State<AddEditVehicleScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _brandController,
-              decoration: const InputDecoration(labelText: 'Brand'),
-            ),
-            TextField(
-              controller: _modelController,
-              decoration: const InputDecoration(labelText: 'Model'),
-            ),
-            TextField(
-              controller: _numberController,
-              decoration: const InputDecoration(labelText: 'Registration Number'),
-            ),
-            TextField(
-              controller: _yearController,
-              decoration: const InputDecoration(labelText: 'Year'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveVehicle,
-              child: Text(isEditing ? 'Update Vehicle' : 'Add Vehicle'),
-            )
-          ],
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _brandController,
+                decoration: const InputDecoration(labelText: 'Brand'),
+                validator: (value) =>
+                value == null || value.trim().isEmpty ? 'Enter brand' : null,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _modelController,
+                decoration: const InputDecoration(labelText: 'Model'),
+                validator: (value) =>
+                value == null || value.trim().isEmpty ? 'Enter model' : null,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _numberController,
+                decoration: const InputDecoration(labelText: 'Registration Number'),
+                validator: (value) =>
+                value == null || value.trim().isEmpty ? 'Enter registration number' : null,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _yearController,
+                decoration: const InputDecoration(labelText: 'Year'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Enter year';
+                  }
+                  final year = int.tryParse(value);
+                  if (year == null || year < 1900 || year > DateTime.now().year + 1) {
+                    return 'Enter a valid year';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 25),
+              ElevatedButton(
+                onPressed: _saveVehicle,
+                child: Text(isEditing ? 'Update Vehicle' : 'Add Vehicle'),
+              ),
+            ],
+          ),
         ),
       ),
     );

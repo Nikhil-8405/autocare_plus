@@ -68,24 +68,29 @@ class _AddMileageScreenState extends State<AddMileageScreen> {
             children: [
               TextFormField(
                 controller: _dateController,
-                decoration: const InputDecoration(labelText: "Date"),
+                decoration: const InputDecoration(
+                  labelText: "Date",
+                  suffixIcon: Icon(Icons.calendar_today),
+                ),
                 readOnly: true,
                 onTap: _pickDate,
                 validator: (value) => value!.isEmpty ? "Please select date" : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _kmController,
                 decoration: const InputDecoration(labelText: "Kilometers Driven"),
                 keyboardType: TextInputType.number,
                 validator: (value) => value!.isEmpty ? "Enter kilometers" : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _fuelController,
                 decoration: const InputDecoration(labelText: "Fuel Added (litres)"),
                 keyboardType: TextInputType.number,
                 validator: (value) => value!.isEmpty ? "Enter fuel added" : null,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               ElevatedButton(
                 onPressed: _submit,
                 child: const Text("Add Mileage"),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../db/db_helper.dart';
 
 class MileageLogScreen extends StatefulWidget {
@@ -26,6 +27,15 @@ class _MileageLogScreenState extends State<MileageLogScreen> {
     });
   }
 
+  String _formatDate(String dateStr) {
+    try {
+      final date = DateTime.parse(dateStr);
+      return DateFormat('dd MMM yyyy').format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double totalKm = 0;
@@ -47,26 +57,54 @@ class _MileageLogScreenState extends State<MileageLogScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 "Total Average: ${totalAvg.toStringAsFixed(1)} km/l",
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
           Expanded(
             child: _mileage.isEmpty
-                ? const Center(child: Text("No mileage records found."))
+                ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(Icons.local_gas_station, size: 60, color: Colors.grey),
+                  SizedBox(height: 12),
+                  Text(
+                    "No mileage records found.",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+            )
                 : ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               itemCount: _mileage.length,
               itemBuilder: (context, index) {
                 final entry = _mileage[index];
                 final double km = (entry['kilometers'] ?? 0).toDouble();
                 final double fuel = (entry['fuel'] ?? 1).toDouble();
                 final avg = fuel > 0 ? km / fuel : 0;
+                final formattedDate = _formatDate(entry['date'] ?? '');
 
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  margin: const EdgeInsets.symmetric(vertical: 6),
                   child: ListTile(
-                    leading: const Icon(Icons.local_gas_station),
-                    title: Text("${km.toStringAsFixed(1)} km  •  ${avg.toStringAsFixed(1)} km/l"),
-                    subtitle: Text(entry['date'] ?? ""),
+                    leading: const CircleAvatar(
+                      backgroundColor: Colors.blueAccent,
+                      child: Icon(Icons.local_gas_station, color: Colors.white),
+                    ),
+                    title: Text(
+                      "${km.toStringAsFixed(1)} km  •  ${avg.toStringAsFixed(1)} km/l",
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: Text(formattedDate),
                   ),
                 );
               },

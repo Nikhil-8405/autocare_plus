@@ -37,29 +37,74 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final avgMileage = totalFuel > 0 ? totalDistance / totalFuel : 0;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Vehicle Report")),
+      appBar: AppBar(
+        title: const Text("Vehicle Report"),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _buildReportTile("Total Service Cost", "₹${totalServiceCost.toStringAsFixed(2)}"),
-            _buildReportTile("Total Distance Driven", "${totalDistance.toStringAsFixed(1)} km"),
-            _buildReportTile("Total Fuel Added", "${totalFuel.toStringAsFixed(1)} litres"),
-            _buildReportTile("Average Mileage", "${avgMileage.toStringAsFixed(1)} km/l"),
-          ],
+        child: Card(
+          elevation: 3,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Table(
+            border: TableBorder.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            columnWidths: const {
+              0: FlexColumnWidth(2),
+              1: FlexColumnWidth(1.5),
+            },
+            children: [
+              _buildHeaderRow(),
+              _buildDataRow("Total Service Cost", "₹${totalServiceCost.toStringAsFixed(2)}"),
+              _buildDataRow("Total Distance Driven", "${totalDistance.toStringAsFixed(1)} km"),
+              _buildDataRow("Total Fuel Added", "${totalFuel.toStringAsFixed(1)} litres"),
+              _buildDataRow("Average Mileage", "${avgMileage.toStringAsFixed(1)} km/l"),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildReportTile(String title, String value) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: const Icon(Icons.analytics),
-        title: Text(title),
-        trailing: Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-      ),
+  TableRow _buildHeaderRow() {
+    return TableRow(
+      decoration: BoxDecoration(color: Colors.blue.shade100),
+      children: const [
+        Padding(
+          padding: EdgeInsets.all(12.0),
+          child: Text(
+            'Metric',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(12.0),
+          child: Text(
+            'Value',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  TableRow _buildDataRow(String title, String value) {
+    return TableRow(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(title),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
     );
   }
 }

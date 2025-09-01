@@ -162,10 +162,13 @@ class _RemindersScreenState extends State<RemindersScreen> {
           final reminder = _reminders[index];
           return Card(
             child: ListTile(
-              title: Text(reminder['title'] ?? ''),
+              title: Text(
+                  reminder['title'] ?? '' ,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
               subtitle: Text(
                 "${DateFormat.yMMMMd().format(DateTime.parse(reminder['reminder_date']))}\n"
-                    "${reminder['notes'] ?? ''}\n"
+                    "${(reminder['notes'] != null && reminder['notes'].toString().trim().isNotEmpty) ? reminder['notes'] : 'No note'}\n"
                     "Vehicle: ${_getVehicleLabel(reminder['vehicle_id'])}",
               ),
               isThreeLine: true,
@@ -179,6 +182,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),
     );

@@ -74,6 +74,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 decoration: const InputDecoration(labelText: "Service Type"),
                 validator: (value) => value!.isEmpty ? "Enter service type" : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _dateController,
                 decoration: const InputDecoration(
@@ -84,18 +85,20 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 onTap: _pickDate,
                 validator: (value) => value!.isEmpty ? "Pick a date" : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _costController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(labelText: "Cost (₹)"),
                 validator: (value) => value!.isEmpty ? "Enter cost" : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _notesController,
                 decoration: const InputDecoration(labelText: "Notes (optional)"),
                 maxLines: 3,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               ElevatedButton(
                 onPressed: _submit,
                 child: const Text("Add Service"),

@@ -39,9 +39,8 @@ class _SelectVehicleScreenState extends State<SelectVehicleScreen> {
 
   void _handleVehicleTap(int vehicleId) {
     if (widget.nextScreen == null) {
-      Navigator.pop(context, vehicleId); // Default behavior
+      Navigator.pop(context, vehicleId);
     } else {
-      // Navigate based on nextScreen value
       switch (widget.nextScreen) {
         case 'report':
           Navigator.push(
@@ -74,7 +73,7 @@ class _SelectVehicleScreenState extends State<SelectVehicleScreen> {
           );
           break;
         default:
-          Navigator.pop(context, vehicleId); // Fallback
+          Navigator.pop(context, vehicleId);
       }
     }
   }
@@ -82,17 +81,67 @@ class _SelectVehicleScreenState extends State<SelectVehicleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Select Vehicle")),
+      appBar: AppBar(
+        title: const Text("Select Vehicle"),
+        backgroundColor: Colors.blue.shade600,
+        elevation: 0,
+      ),
       body: _vehicles.isEmpty
-          ? const Center(child: Text("No vehicles found."))
+          ? const Center(
+        child: Text(
+          "No vehicles found.",
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
+      )
           : ListView.builder(
         itemCount: _vehicles.length,
+        padding: const EdgeInsets.all(12),
         itemBuilder: (context, index) {
           final vehicle = _vehicles[index];
-          return ListTile(
-            title: Text(vehicle['model'] ?? 'Unknown Model'),
-            subtitle: Text(vehicle['number'] ?? 'No Number'),
-            onTap: () => _handleVehicleTap(vehicle['id']),
+          return Card(
+            elevation: 3,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => _handleVehicleTap(vehicle['id']),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.directions,
+                        size: 30, color: Colors.blue),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            vehicle['model'] ?? 'Unknown Model',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            vehicle['number'] ?? 'No Number',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios,
+                        size: 16, color: Colors.grey),
+                  ],
+                ),
+              ),
+            ),
           );
         },
       ),
