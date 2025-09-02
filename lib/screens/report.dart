@@ -59,7 +59,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               _buildHeaderRow(),
               _buildDataRow("Total Service Cost", "₹${totalServiceCost.toStringAsFixed(2)}"),
               _buildDataRow("Total Distance Driven", "${totalDistance.toStringAsFixed(1)} km"),
-              _buildDataRow("Total Fuel Added", "${totalFuel.toStringAsFixed(1)} litres"),
+              _buildDataRow("Total Fuel Consumed", "${totalFuel.toStringAsFixed(1)} litres"),
               _buildDataRow("Average Mileage", "${avgMileage.toStringAsFixed(1)} km/l"),
             ],
           ),

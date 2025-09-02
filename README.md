@@ -1,16 +1,103 @@
-# autocare_plus
+# 🚗 AutoCare+
 
-A mileage and service tracker app for vehicle owners.
+![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)  
+![SQLite](https://img.shields.io/badge/Database-SQLite-lightgrey?logo=sqlite)  
+![Platform](https://img.shields.io/badge/Platform-Android-green?logo=android)
 
-## Getting Started
+**AutoCare+** is a Flutter-based mobile application designed for **vehicle users and garage owners** to manage vehicles, service history, mileage logs, reports and reminders — all in one place.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## ✨ Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* 👤 **User Authentication**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    * Register, login, and persistent login with SQLite + SharedPreferences.
+    * Secure logout functionality.
+
+* 📋 **Vehicle Management**
+
+    * Add, edit, delete and view vehicles.
+    * Store details like brand, model, registration number, and year.
+
+* 🛠 **Service Records**
+
+    * Add service history for each vehicle.
+    * View complete service history anytime.
+
+* ⛽ **Mileage Tracking**
+
+    * Log fuel entries with distance and fuel.
+    * Calculate mileage efficiency (km/l).
+
+* 📊 **Reports**
+
+    * Get summarized reports:
+
+        * Total Service Cost
+        * Total Distance Driven
+        * Total Fuel Consumed
+        * Average Mileage (km/l)
+
+* ⏰ **Reminders**
+
+    * Add reminders for service/maintenance.
+    * Associate reminders with vehicles.
+
+* 🎨 **Modern UI/UX**
+
+    * Consistent design across screens.
+    * Gradient dashboard with grid features.
+    * Themed form fields, cards, and dialogs.
+    * Bottom navigation bar for quick access.
+
+---
+
+## 🖼️ Screenshots
+
+| Dashboard                               | Vehicle List                                  | Reports                                    | Reminders                               |
+|-----------------------------------------|-----------------------------------------------|--------------------------------------------|-----------------------------------------|
+| ![Dashboard](screenshots/Dashboard.jpg) | ![Vehicle List](screenshots/Vehicle_List.jpg) | ![Reports](screenshots/Vehicle_Report.jpg) | ![Reminders](screenshots/Reminders.jpg) |
+
+---
+
+## 🛠 Tech Stack
+
+* **Frontend:** Flutter (Dart)
+* **Database:** SQLite (via sqflite)
+* **Storage:** SharedPreferences (for login state)
+* **IDE:** Android Studio 
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+* Install [Flutter SDK](https://flutter.dev/docs/get-started/install)
+* Install [Android Studio](https://developer.android.com/studio) or VS Code with Flutter plugin
+* Android Emulator / Real Device
+
+### Steps
+
+```bash
+# Clone repository
+git clone https://github.com/Nikhil-8405/autocare_plus.git
+
+# Navigate into project folder
+cd autocare_plus
+
+# Get dependencies
+flutter pub get
+
+# Run app
+flutter run
+```
+
+---
+
+## 👨‍💻 Author
+
+Developed by **\[Nikhil Yandaet]**
+
+---

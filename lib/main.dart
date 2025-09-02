@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+
+// import 'package:sqflite/sqflite.dart';
+// import 'package:path/path.dart';
+
 import 'screens/home.dart';
 import 'screens/login.dart';
 import 'screens/register.dart';
 
-void main() {
+void main()  {  //use async when below lines are uncommented
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await deleteDatabase(join(await getDatabasesPath(), 'autocare.db'));
   runApp(const AutoCareApp());
 }
 

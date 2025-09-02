@@ -46,7 +46,9 @@ class _RemindersScreenState extends State<RemindersScreen> {
   }
 
   Future<void> _addReminder() async {
-    if (_titleController.text.isEmpty || _selectedDate == null || _selectedVehicleId == null) return;
+    if (_titleController.text.isEmpty ||
+        _selectedDate == null ||
+        _selectedVehicleId == null) return;
 
     final reminder = {
       'user_id': widget.userId,
@@ -62,7 +64,9 @@ class _RemindersScreenState extends State<RemindersScreen> {
     _titleController.clear();
     _notesController.clear();
     _selectedDate = null;
-    _selectedVehicleId = _vehicles.isNotEmpty ? _vehicles.first['id'] : null;
+    _selectedVehicleId =
+    _vehicles.isNotEmpty ? _vehicles.first['id'] : null;
+
     Navigator.pop(context);
     _loadReminders();
   }
@@ -71,6 +75,10 @@ class _RemindersScreenState extends State<RemindersScreen> {
     final db = DBHelper();
     await db.deleteReminder(id);
     _loadReminders();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Reminder deleted")),
+    );
   }
 
   void _showAddDialog() {
@@ -81,17 +89,26 @@ class _RemindersScreenState extends State<RemindersScreen> {
         content: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(controller: _titleController, decoration: const InputDecoration(labelText: "Title")),
-              TextField(controller: _notesController, decoration: const InputDecoration(labelText: "Notes")),
+              TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: "Title")),
+              TextField(
+                  controller: _notesController,
+                  decoration: const InputDecoration(labelText: "Notes")),
               const SizedBox(height: 10),
               DropdownButtonFormField<int>(
                 value: _selectedVehicleId,
                 decoration: const InputDecoration(labelText: "Select Vehicle"),
+                isExpanded: true,
                 items: _vehicles.map((vehicle) {
-                  final label = "${vehicle['brand']} ${vehicle['model']} (${vehicle['number']})";
+                  final label =
+                      "${vehicle['brand']} ${vehicle['model']} (${vehicle['number']})";
                   return DropdownMenuItem<int>(
                     value: vehicle['id'],
-                    child: Text(label),
+                    child: Text(
+                      label,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   );
                 }).toList(),
                 onChanged: (val) {
@@ -100,6 +117,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                   });
                 },
               ),
+
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -132,8 +150,11 @@ class _RemindersScreenState extends State<RemindersScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(onPressed: _addReminder, child: const Text("Add"))
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
+          ElevatedButton(
+              onPressed: _addReminder, child: const Text("Add"))
         ],
       ),
     );
@@ -153,7 +174,6 @@ class _RemindersScreenState extends State<RemindersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(title: const Text("Reminders")),
       body: _reminders.isEmpty
           ? const Center(child: Text("No reminders yet."))
           : ListView.builder(
@@ -163,8 +183,9 @@ class _RemindersScreenState extends State<RemindersScreen> {
           return Card(
             child: ListTile(
               title: Text(
-                  reminder['title'] ?? '' ,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                reminder['title'] ?? '',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
                 "${DateFormat.yMMMMd().format(DateTime.parse(reminder['reminder_date']))}\n"
@@ -174,7 +195,32 @@ class _RemindersScreenState extends State<RemindersScreen> {
               isThreeLine: true,
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () => _deleteReminder(reminder['id']),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text("Delete Reminder"),
+                      content: const Text(
+                          "Are you sure you want to delete this reminder?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () =>
+                              Navigator.pop(ctx), // cancel
+                          child: const Text("Cancel"),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                          ),
+                          onPressed: () async {
+                            Navigator.pop(ctx); // close dialog
+                            await _deleteReminder(reminder['id']);
+                          },
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           );
