@@ -55,9 +55,9 @@
 
 ## 🖼️ Screenshots
 
-| Dashboard                               | Vehicle List                                  | Reports                                    | Reminders                               |
-|-----------------------------------------|-----------------------------------------------|--------------------------------------------|-----------------------------------------|
-| ![Dashboard](screenshots/Dashboard.jpg) | ![Vehicle List](screenshots/Vehicle_List.jpg) | ![Reports](screenshots/Vehicle_Report.jpg) | ![Reminders](screenshots/Reminders.jpg) |
+| Dashboard | Vehicle List | Reports | Reminders |
+|-----------|--------------|---------|-----------|
+| <img src="screenshots/Dashboard.jpg" width="240"/> | <img src="screenshots/Vehicle_List.jpg" width="240"/> | <img src="screenshots/Vehicle_Report.jpg" width="240"/> | <img src="screenshots/Reminders.jpg" width="240"/> |
 
 ---
 
