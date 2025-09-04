@@ -49,3 +49,6 @@ app.*.map.json
 
 # Windows specific
 Thumbs.db
+
+# Ignore Flutter DevTools config
+devtools_options.yaml

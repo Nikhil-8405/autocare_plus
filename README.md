@@ -57,7 +57,7 @@
 
 | Dashboard | Vehicle List | Reports | Reminders |
 |-----------|--------------|---------|-----------|
-| <img src="screenshots/Dashboard.jpg" width="240"/> | <img src="screenshots/Vehicle_List.jpg" width="240"/> | <img src="screenshots/Vehicle_Report.jpg" width="240"/> | <img src="screenshots/Reminders.jpg" width="240"/> |
+| <a href="screenshots/Dashboard.jpg"><img src="screenshots/Dashboard.jpg" width="240" height="480" alt="Dashboard"/></a> | <a href="screenshots/Vehicle_List.jpg"><img src="screenshots/Vehicle_List.jpg" width="240" height="480" alt="Vehicle List"/></a> | <a href="screenshots/Vehicle_Report.jpg"><img src="screenshots/Vehicle_Report.jpg" width="240" height="480" alt="Reports"/></a> | <a href="screenshots/Reminders.jpg"><img src="screenshots/Reminders.jpg" width="240" height="480" alt="Reminders"/></a> |
 
 ---
 
